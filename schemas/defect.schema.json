@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Defect",
+  "type": "object",
+  "required": ["id", "title", "severity", "priority", "status", "description", "reproductionSteps", "evidence"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^DEF-[0-9]+$"},
+    "title": {"type": "string"},
+    "requirementIds": {"type": "array", "items": {"type": "string"}},
+    "testCaseIds": {"type": "array", "items": {"type": "string"}},
+    "severity": {"enum": ["blocker", "critical", "major", "minor", "trivial"]},
+    "priority": {"enum": ["P0", "P1", "P2", "P3"]},
+    "status": {"enum": ["new", "triaged", "in-progress", "ready-for-retest", "reopened", "resolved", "closed", "duplicate", "not-a-bug", "cannot-reproduce"]},
+    "description": {"type": "string"},
+    "environment": {"type": "string"},
+    "reproductionSteps": {"type": "array", "items": {"type": "string"}},
+    "expected": {"type": "string"},
+    "actual": {"type": "string"},
+    "evidence": {"type": "array", "items": {"type": "string"}},
+    "rootCause": {"type": "string"}
+  }
+}
