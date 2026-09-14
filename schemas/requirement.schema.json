@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Requirement",
+  "type": "object",
+  "required": ["id", "title", "source", "statement", "priority", "status"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^REQ-[0-9]+$"},
+    "title": {"type": "string"},
+    "source": {"type": "string"},
+    "statement": {"type": "string"},
+    "acceptanceCriteria": {"type": "array", "items": {"type": "string"}},
+    "businessRules": {"type": "array", "items": {"type": "string"}},
+    "priority": {"enum": ["P0", "P1", "P2", "P3"]},
+    "status": {"enum": ["draft", "review", "approved", "blocked"]},
+    "risks": {"type": "array", "items": {"type": "string"}},
+    "gaps": {"type": "array", "items": {"type": "string"}}
+  }
+}
