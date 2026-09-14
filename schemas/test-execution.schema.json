@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Test Execution",
+  "type": "object",
+  "required": ["id", "testCaseId", "status", "startedAt"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^RUN-[0-9]+$"},
+    "testCaseId": {"type": "string"},
+    "environment": {"type": "string"},
+    "browser": {"type": "string"},
+    "status": {"enum": ["passed", "failed", "skipped", "blocked", "error"]},
+    "startedAt": {"type": "string", "format": "date-time"},
+    "endedAt": {"type": "string", "format": "date-time"},
+    "durationMs": {"type": "integer", "minimum": 0},
+    "evidence": {"type": "array", "items": {"type": "string"}},
+    "failureId": {"type": "string"}
+  }
+}
