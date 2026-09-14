@@ -1,12 +1,14 @@
 import { AgentRegistry } from './agent-registry.mjs';
 import { ArtifactStore } from './store.mjs';
+import { runPlaywright } from './playwright-executor.mjs';
 
 const id = (prefix, n) => `${prefix}-${String(n).padStart(3, '0')}`;
 
 export class StlcOrchestrator {
-  constructor({ agents = new AgentRegistry(), store = new ArtifactStore() } = {}) {
+  constructor({ agents = new AgentRegistry(), store = new ArtifactStore(), executor = runPlaywright } = {}) {
     this.agents = agents;
     this.store = store;
+    this.executor = executor;
   }
 
   async analyzeRequirements(request) {
@@ -28,6 +30,15 @@ export class StlcOrchestrator {
     const result = await this.agents.run('automation', { request, requirements, testCases });
     await this.store.put(request.projectId, 'automation', result);
     return result;
+  }
+
+  async execute(request) {
+    const startedAt = new Date().toISOString();
+    const raw = await this.executor({ grep: request.grep, project: request.playwrightProject, workers: request.workers });
+    const endedAt = new Date().toISOString();
+    const result = { id: `RUN-${Date.now()}`, status: raw.code === 0 ? 'passed' : 'failed', startedAt, endedAt, environment: request.targetEnvironment, raw }; 
+    await this.store.put(request.projectId, 'execution', result);
+    return [result];
   }
 
   async analyzeFailures(request, executionResults) {
@@ -61,8 +72,8 @@ export class StlcOrchestrator {
     const requirements = await this.analyzeRequirements(request);
     const testArtifacts = await this.generateTests(request, requirements);
     const automation = await this.planAutomation(request, requirements, testArtifacts.testCases);
-    const executionResults = [];
-    const failures = request.executeAfterGeneration ? await this.analyzeFailures(request, executionResults) : [];
+    const executionResults = request.executeAfterGeneration ? await this.execute(request) : [];
+    const failures = executionResults.length ? await this.analyzeFailures(request, executionResults) : [];
     const defects = request.openDefects ? await this.manageDefects(request, failures) : { defects: [], dedupCandidates: [] };
     const report = await this.report(request, { requirements, ...testArtifacts, automation, executionResults, failures, defects });
     return { requirements, ...testArtifacts, automation, executionResults, failures, defects, report };

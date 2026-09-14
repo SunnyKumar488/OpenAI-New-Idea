@@ -1,0 +1,6 @@
+# Runtime artifacts
+.runtime/
+playwright-report/
+test-results/
+.env
+node_modules/
