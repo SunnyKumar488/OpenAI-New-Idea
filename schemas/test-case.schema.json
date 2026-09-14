@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Test Case",
+  "type": "object",
+  "required": ["id", "requirementIds", "title", "priority", "steps", "expectedResult"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^TC-[0-9]+$"},
+    "requirementIds": {"type": "array", "items": {"type": "string", "pattern": "^REQ-[0-9]+$"}},
+    "scenarioId": {"type": "string"},
+    "title": {"type": "string"},
+    "priority": {"enum": ["P0", "P1", "P2", "P3"]},
+    "type": {"enum": ["functional", "negative", "boundary", "security", "performance", "regression"]},
+    "preconditions": {"type": "array", "items": {"type": "string"}},
+    "testData": {"type": "array", "items": {"type": "string"}},
+    "steps": {"type": "array", "items": {"type": "string"}},
+    "expectedResult": {"type": "string"},
+    "automationStatus": {"enum": ["candidate", "automated", "manual", "blocked"]}
+  }
+}
