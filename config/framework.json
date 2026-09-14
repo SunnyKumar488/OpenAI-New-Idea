@@ -1,0 +1,7 @@
+{
+  "project": "stlc-automated-framework",
+  "baseUrl": "http://localhost:3000",
+  "test": {"browser": "chromium", "headed": false, "workers": 1, "retries": 0},
+  "defect": {"deduplicationRequired": true, "defaultSeverity": "major", "defaultPriority": "P2"},
+  "approvalGates": {"ambiguousRequirement": true, "productionExecution": true, "releaseRecommendation": true}
+}
